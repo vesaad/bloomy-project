@@ -13,10 +13,10 @@ nav{
     justify-content: space-between;
     padding: 0px 50px 0px 100px;
 }
-nav .logo{
-    font-size: 40px;
-    color: rgb(164, 79, 108);
-    font-weight: 600;
+.logo img{
+    height: 60px;
+    width: auto;
+    margin-top: 10px;
 }
 nav ul{
     display: flex;
