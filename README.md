@@ -1,2 +1,0 @@
-# bloomy-project
-ProjektWEB
