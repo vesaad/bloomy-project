@@ -13,6 +13,15 @@ html{
 section{
     padding: 2rem 9%;
 }
+.heading{
+    text-align: center;
+    color: #333;
+    padding-bottom: 3.5rem;
+    font-size: 4rem;
+}
+.heading span{
+    color: #da48ae;  
+}
 .btn{
     display: inline-block;
     margin-top: 1rem;
@@ -155,7 +164,32 @@ nav .menu-btn i{
    
 }
 
-
+.about .row{
+    display: flex;
+    align-items: center;
+    background-color: #ede8e8;
+    flex-wrap: wrap;
+}
+.about .row .image{
+    flex: 1 1 45rem;
+}
+.about .row .image img{
+    width: 100%;
+}
+.about .row .content{
+    flex: 1 1 45rem;
+    padding: 2rem;
+}
+.about .row .content h3{
+    font-size: 3rem;
+    color: #333;
+}
+.about .row .content p{
+    font-size: 1.6rem;
+    color: #333;
+    padding: 1rem 0;
+    line-height: 1.8;
+}
 
 
 footer{
