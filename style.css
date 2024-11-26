@@ -89,7 +89,7 @@ nav .menu-btn i{
 
 footer{
     width: 100%;
-    position: absolute;
+    position: bottom;
     bottom: 0;
     background: pink;
     color: #fff;
