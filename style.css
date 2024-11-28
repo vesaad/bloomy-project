@@ -8,15 +8,15 @@ body {
 
 .container {
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap; /* Ensures elements wrap on smaller screens */
   justify-content: space-between;
-  gap: 20px; 
+  gap: 20px; /* Adds spacing between the banner and grid */
   padding: 20px;
 }
 
 /* Sale Banner */
 .sale-banner {
-  flex: 1 1 30%; 
+  flex: 1 1 30%; /* Responsive resizing */
   text-align: center;
   background-color: pink;
   padding: 30px;
@@ -44,15 +44,15 @@ body {
   background-color: #555;
 }
 
-/* Product  */
+/* Product Grid */
 .product-grid {
-  flex: 1 1 65%; 
+  flex: 1 1 65%; /* Responsive resizing */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Auto-adjust columns */
   gap: 20px;
 }
 
-/* Product  */
+/* Product Cards */
 .product-card {
   background-color:white;
   padding: 20px;
@@ -129,12 +129,13 @@ body {
   background-color: #cc005f;
 }
 
-
+/* Responsive Design */
 @media (max-width: 768px) {
   .sale-banner {
-    flex: 1 1 100%; 
+    flex: 1 1 100%; /* Banner spans full width on smaller screens */
+  }
 
   .product-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjusts columns for smaller devices */
   }
 }
