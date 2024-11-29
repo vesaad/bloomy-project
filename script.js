@@ -7,7 +7,6 @@ document.getElementById('toggle-password').addEventListener('change', function (
     }
 });
 
-// Krijo një mesazh gabimi për passwordin
 const passwordError = document.getElementById('password-error');
 
 // Fusha e emrit
