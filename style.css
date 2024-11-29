@@ -203,13 +203,12 @@ nav .menu-btn i{
     line-height: 1.8;
 }
 .icons-container{
-    background: #eee;
+
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-    margin: 4rem;
+    padding-top: 8rem;
+
 }
 
 .icons-container .icons{
