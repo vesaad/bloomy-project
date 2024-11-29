@@ -82,12 +82,12 @@ nav .menu-btn i{
     background-color: none;
     }
 }
-/* About Us Section */
+
 .about-us {
     width: 85%;
-    margin: 100px auto; /* Hapësirë nga header-i */
+    margin: 100px auto; 
     padding: 20px;
-    background: #ffe4e1; /* Një nuancë e lehtë rozë për t'iu përshtatur temës */
+    background: #ffe4e1; 
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -95,7 +95,7 @@ nav .menu-btn i{
 
 .about-us h1 {
     font-size: 36px;
-    color: #e91e63; /* Ngjyrë e errët rozë për titullin */
+    color: #e91e63; 
     margin-bottom: 20px;
     text-transform: uppercase;
     font-weight: 600;
@@ -110,7 +110,7 @@ nav .menu-btn i{
 
 .about-us h2 {
     font-size: 28px;
-    color: #d81b60; /* Ngjyrë pak më e errët për titujt e seksioneve */
+    color: #d81b60; 
     margin: 30px 0 10px;
     font-weight: 500;
     text-transform: capitalize;
@@ -133,7 +133,7 @@ nav .menu-btn i{
 }
 
 .about-us ul li::before {
-    content: "\2022"; /* Simbol për listë */
+    content: "\2022";
     color: #e91e63;
     font-weight: bold;
     display: inline-block;
@@ -168,9 +168,6 @@ nav .menu-btn i{
         font-size: 14px;
     }
 }
-
-
-
 
 footer{
     width: 100%;
