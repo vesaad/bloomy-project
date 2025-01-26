@@ -43,7 +43,7 @@ try {
             echo "Invalid password. Please try again.";
         }
     } else {
-        echo "No user found with this email and role.";
+        echo "No users found with this email and role.";
     }
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
