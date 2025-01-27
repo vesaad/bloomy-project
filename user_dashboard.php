@@ -51,6 +51,9 @@ try {
         <p>Postcode: <?php echo htmlspecialchars($user['postcode']); ?></p>
 
         <a href="userlogout.php">Log Out</a>
+        <a href="index.html">Home</a>
+
+
     </div>
 </body>
 </html>

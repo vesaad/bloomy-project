@@ -13,6 +13,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
+    margin-top: 40px;
 }
 
 .dashboard h1 {
@@ -24,6 +25,7 @@ body {
     font-size: 18px;
     color: #555;
 }
+
 
 a {
     display: inline-block;
@@ -39,6 +41,7 @@ a {
 a:hover {
     background: #a73585;
 }
+
 
 @media (max-width: 600px) {
     .dashboard {
