@@ -49,8 +49,9 @@
             <p>Don't have an account? <a href="signup-update.php">Register here.</a></p>
           </div>
       </form>
-     </div>
+     </div>git 
   </section>
    <script src="script.js"></script>
+   
 </body>
 </html>

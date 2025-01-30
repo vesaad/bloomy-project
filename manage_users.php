@@ -214,7 +214,6 @@ $mysqli->close();
                 <button type="submit"><?php echo isset($editUser ) ? 'Update User' : 'Add User'; ?></button>
             </form>
         </div>
-
         <div class="user-list">
             <h2>Existing Users</h2>
             <table>
