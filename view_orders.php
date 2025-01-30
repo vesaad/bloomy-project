@@ -1,3 +1,72 @@
+<?php
+session_start();
+
+// Database connection
+$mysqli = new mysqli("localhost", "root", "", "bloomy_db");
+
+// Check connection
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+// Handle form submission for adding/updating orders
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $orderId = $_POST['order_id'];
+    $customerName = $_POST['customer_name'];
+    $product = $_POST['product'];
+    $status = $_POST['status'];
+    $total = $_POST['total'];
+
+    if ($orderId) {
+        // Update existing order
+        $stmt = $mysqli->prepare("UPDATE orders SET customer_name=?, product=?, status=?, total=? WHERE id=?");
+        $stmt->bind_param("ssssi", $customerName, $product, $status, $total, $orderId);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        // Add new order
+        $stmt = $mysqli->prepare("INSERT INTO orders (customer_name, product, status, total) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("sssd", $customerName, $product, $status, $total);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // Redirect to avoid form resubmission
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Handle edit action
+$editOrder = null;
+if (isset($_GET['edit'])) {
+    $orderId = $_GET['edit'];
+    $stmt = $mysqli->prepare("SELECT * FROM orders WHERE id=?");
+    $stmt->bind_param("i", $orderId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $editOrder = $result->fetch_assoc();
+    $stmt->close();
+}
+
+// Handle delete action
+if (isset($_GET['delete'])) {
+    $orderId = $_GET['delete'];
+    $stmt = $mysqli->prepare("DELETE FROM orders WHERE id=?");
+    $stmt->bind_param("i", $orderId);
+    $stmt->execute();
+    $stmt->close();
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Fetch existing orders from the database
+$result = $mysqli->query("SELECT * FROM adminpanel");
+$orders = $result->fetch_all(MYSQLI_ASSOC);
+
+// Close the database connection
+$mysqli->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,19 +119,40 @@
             margin-bottom: 20px;
         }
 
-        .orders-table {
+        .order-form {
+            background-color: rgb(255, 228, 233);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .order-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .order-form input, .order-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .order-list {
             background-color: rgb(255, 228, 233);
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .orders-table table {
+        .order-list table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .orders-table th, .orders-table td {
+        .order-list th, .order-list td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -79,14 +169,13 @@
         }
     </style>
 </head>
-<body> 
-    
-<nav>
+<body>
+    <nav>
         <div class="logo"><img src="img/logo.jpg" alt="Bloomy Logo"></div>
         <ul>
-            <li><a href="admin_dashboard.php" class="active">Dashboard</a></li>
+            <li><a href="admin_dashboard.php">Dashboard</a></li>
             <li><a href="manage-products.php">Manage Products</a></li>
-            <li><a href="view_orders.php">View Orders</a></li>
+            <li><a href="view_orders.php" class="active">View Orders</a></li>
             <li><a href="manage_users.php">Manage Users</a></li>
             <li><a href="login-update.php">Logout</a></li>
         </ul>
@@ -94,7 +183,33 @@
 
     <section class="view-orders">
         <h1>View Orders</h1>
-        <div class="orders-table">
+        
+        <div class="order-form">
+            <h2><?php echo isset($editOrder) ? 'Edit Order' : 'Add New Order'; ?></h2>
+            <form method="POST" action="">
+                <input type="hidden" name="order_id" value="<?php echo isset($editOrder) ? $editOrder['id'] : ''; ?>">
+                <label for="customer_name">Customer Name</label>
+                <input type="text" id="customer_name" name="customer_name" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['customer_name']) : ''; ?>">
+
+                <label for="product">Product</label>
+                <input type="text" id="product" name="product" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['product']) : ''; ?>">
+
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    <option value="Pending" <?php echo (isset($editOrder) && $editOrder['status'] == 'Pending') ? 'selected' : ''; ?>>Pending</option>
+                    <option value="Shipped" <?php echo (isset($editOrder) && $editOrder['status'] == 'Shipped') ? 'selected' : ''; ?>>Shipped</option>
+                    <option value="Delivered" <?php echo (isset($editOrder) && $editOrder['status'] == 'Delivered') ? 'selected' : ''; ?>>Delivered</option>
+                </select>
+
+                <label for="total">Total</label>
+                <input type="number" id="total" name="total" step="0.01" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['total']) : ''; ?>">
+
+                <button type="submit"><?php echo isset($editOrder) ? 'Update Order' : 'Add Order'; ?></button>
+            </form>
+        </div>
+
+        <div class="order-list">
+            <h2>Existing Orders</h2>
             <table>
                 <thead>
                     <tr>
@@ -103,31 +218,23 @@
                         <th>Product</th>
                         <th>Status</th>
                         <th>Total</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>#001</td>
-                        <td>Jane Doe</td>
-                        <td>Charlotte Tilbury</td>
-                        <td>Shipped</td>
-                        <td>$8.95</td>
-                    </tr>
-                    <tr>
-                        <td>#002</td>
-                        <td>John Smith</td>
-                        <td>Huda Beauty</td>
-                        <td>Processing</td>
-                        <td>$31.00</td>
-                    </tr>
-                    <tr>
-                        <td>#003</td>
-                        <td>Emily Johnson</td>
-                        <td>Rare Beauty</td>
-                        <td>Delivered</td>
-                        <td>$23.99</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
+                    <?php foreach ($orders as $order): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($order['id']); ?></td>
+                            <td><?php echo htmlspecialchars($order['customer_name']); ?></td>
+                            <td><?php echo htmlspecialchars($order['product']); ?></td>
+                            <td><?php echo htmlspecialchars($order['status']); ?></td>
+                            <td><?php echo htmlspecialchars($order['total']); ?></td>
+                            <td>
+                                <a href="?edit=<?php echo $order['id']; ?>">Edit</a> | 
+                                <a href="?delete=<?php echo $order['id']; ?>" onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>

@@ -44,13 +44,9 @@
               <option value="admin">Administrator</option>
             </select>
           </div>
-        <div class="remember-forgot">
-            <label><input type="checkbox"> Remember me</label>
-            <a href="#">Forgot password?</a>
-        </div>
         <button type="submit" class="btn">Log In</button>
         <div class="register-link">
-            <p>Don't have an account? <a href="signup-update.html">Register here.</a></p>
+            <p>Don't have an account? <a href="signup-update.php">Register here.</a></p>
           </div>
       </form>
      </div>

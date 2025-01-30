@@ -1,3 +1,34 @@
+<?php
+session_start();
+
+// Database connection
+$mysqli = new mysqli("localhost", "root", "", "bloomy_db");
+
+// Check connection
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+// Fetch total users
+$totalUsersResult = $mysqli->query("SELECT COUNT(*) as total FROM signup");
+$totalUsers = $totalUsersResult->fetch_assoc()['total'];
+
+// Fetch total orders
+$totalOrdersResult = $mysqli->query("SELECT COUNT(*) as total FROM adminpanel");
+$totalOrders = $totalOrdersResult->fetch_assoc()['total'];
+
+// Fetch total products
+$totalProductsResult = $mysqli->query("SELECT COUNT(*) as total FROM products");
+$totalProducts = $totalProductsResult->fetch_assoc()['total'];
+
+// Fetch recent orders
+$recentOrdersResult = $mysqli->query("SELECT * FROM adminpanel ORDER BY created_at DESC LIMIT 5");
+$recentOrders = $recentOrdersResult->fetch_all(MYSQLI_ASSOC);
+
+// Close the database connection
+$mysqli->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +117,7 @@
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         footer {
             text-align: center;
             padding: 20px;
@@ -96,7 +128,6 @@
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
-    <script src="https://kit.fontawesome.com/7f89c2fcf6.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav>
@@ -114,16 +145,16 @@
         <h1>Admin Dashboard</h1>
         <div class="stats">
             <div class="stat-card">
-                <h3>Total Products</h3>
-                <p>150</p>
+                <h3>Total Users</h3>
+                <p><?php echo $totalUsers; ?></p>
             </div>
             <div class="stat-card">
                 <h3>Total Orders</h3>
-                <p>75</p>
+                <p><?php echo $totalOrders; ?></p>
             </div>
             <div class="stat-card">
-                <h3>Total Users</h3>
-                <p>200</p>
+                <h3>Total Products</h3>
+                <p><?php echo $totalProducts; ?></p>
             </div>
         </div>
 
@@ -137,11 +168,30 @@
                         <th>Product</th>
                         <th>Status</th>
                         <th>Total</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>#001</td>
-                        <td>Jane Doe</td>
-                        <td>Charlotte Tilbury</td>
-                        <td>Shipped</td>
+                    <?php foreach ($recentOrders as $order): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($order['id']); ?></td>
+                            <td><?php echo htmlspecialchars($order['customer_name']); ?></td>
+                            <td><?php echo htmlspecialchars($order['product']); ?></td>
+                            <td><?php echo htmlspecialchars($order['status']); ?></td>
+                            <td><?php echo htmlspecialchars($order['total']); ?></td>
+                            <td>
+                                <a href="view_orders.php?edit=<?php echo $order['id']; ?>">Edit</a> | 
+                                <a href="view_orders.php?delete=<?php echo $order['id']; ?>" onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer>
+        <p>Bloomy Beauty Shop © 2024 - All Rights Reserved</p>
+    </footer>
+</body>
+</html>
