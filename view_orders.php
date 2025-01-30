@@ -79,7 +79,8 @@
         }
     </style>
 </head>
-<body>
+<body> 
+    
 <nav>
         <div class="logo"><img src="img/logo.jpg" alt="Bloomy Logo"></div>
         <ul>
