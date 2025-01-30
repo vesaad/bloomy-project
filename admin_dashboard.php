@@ -86,6 +86,7 @@
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+        
         footer {
             text-align: center;
             padding: 20px;
