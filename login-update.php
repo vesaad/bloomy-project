@@ -51,7 +51,6 @@
       </form>
      </div>git 
   </section>
-   <script src="script.js"></script>
-   
+  <script src="script.js"></script>
 </body>
 </html>

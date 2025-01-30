@@ -65,7 +65,6 @@
                 <div class="register-link">
                   <p>Already have an account? <a href="login-update.php">Log In here.</a></p>
                 </div>
-               
             </form>
         </div>
     </section>
