@@ -22,10 +22,10 @@
             <i class="fa-solid fa-bars"></i>
         </label>
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Home</a></li>
             <li><a href="products.html">Products</a></li>
             <li><a href="aboutus.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'aboutus.php' ? 'active' : ''; ?>">About us</a></li>
             <li><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
-            <li><a href="signup-update.html"><i class="fa-solid fa-user"></i></a></li>
+            <li><a href="signup-update.php"class="<?php echo basename($_SERVER['PHP_SELF']) == 'login-update.php' ? 'active' : ''; ?>"><i class="fa-solid fa-user"></i></a></li>
         </ul>
     </nav>
