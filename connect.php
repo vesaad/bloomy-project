@@ -6,23 +6,37 @@ $password = isset($_POST['password']) ? $_POST['password'] : '';
 $birthday = isset($_POST['birthday']) ? $_POST['birthday'] : '';
 $address = isset($_POST['address']) ? $_POST['address'] : '';
 $postcode = isset($_POST['postcode']) ? $_POST['postcode'] : '';
+$role = isset($_POST['role']) ? $_POST['role'] : 'user'; 
 
-$conn = new mysqli('localhost','root', '', 'bloomy_db');
-if ($conn->connect_error) {
-    die('Connection Failed : ' . $conn->connect_error);
-} else {
-    $stmt = $conn->prepare("INSERT INTO signup(firstName, lastName, email, password, birthday, address, postcode)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)");
-    if ($stmt === false) {
-        die('Prepare failed: ' . $conn->error);
-    }
-    $stmt->bind_param("ssssiss", $firstName, $lastName, $email, $password, $birthday, $address, $postcode);
+
+try {
+
+    $pdo = new PDO('mysql:host=localhost;dbname=bloomy_db', 'root', '');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+    $sql = "INSERT INTO signup (firstName, lastName, email, password, birthday, address, postcode, role)
+            VALUES (:firstName, :lastName, :email, :password, :birthday, :address, :postcode, :role)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':firstName', $firstName);
+    $stmt->bindParam(':lastName', $lastName);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':password', $password);
+    $stmt->bindParam(':birthday', $birthday);
+    $stmt->bindParam(':address', $address);
+    $stmt->bindParam(':postcode', $postcode);
+    $stmt->bindParam(':role', $role);
+
+    
     if ($stmt->execute()) {
         echo "SignUp Successful...";
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Error: Failed to insert data.";
     }
-    $stmt->close();
-    $conn->close();
+} catch (PDOException $e) {
+
+    echo "Connection failed: " . $e->getMessage();
 }
 ?>
+

@@ -9,6 +9,7 @@ if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error);
 }
 
+
 // Handle form submission for adding/updating orders
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $orderId = $_POST['order_id'];

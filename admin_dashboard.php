@@ -175,6 +175,7 @@ $mysqli->close();
                 <tbody>
                     <?php foreach ($recentOrders as $order): ?>
                         <tr>
+                            
                             <td><?php echo htmlspecialchars($order['id']); ?></td>
                             <td><?php echo htmlspecialchars($order['customer_name']); ?></td>
                             <td><?php echo htmlspecialchars($order['product']); ?></td>

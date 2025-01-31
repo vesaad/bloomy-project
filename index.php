@@ -20,9 +20,13 @@
         <ul>
             <li><a class="active" href="index.html">Home</a></li>
             <li><a href="products.html">Products</a></li>
+<<<<<<< HEAD:index.html
             <li><a href="aboutus.php">About us</a></li>
+=======
+            <li><a href="aboutus.html">About us</a></li>
+>>>>>>> 0265e5e928a3493a11144d8fea503f1c58b83556:index.php
             <li><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
-            <li><a href="signup-update.html"><i class="fa-solid fa-user"></i></a></li>
+            <li><a href="signup-update.php"><i class="fa-solid fa-user"></i></a></li>
         </ul>
     </nav>
 
@@ -34,7 +38,7 @@
                 makeup essentials. Discover top-quality products, expert 
                 tips, and everything you need to enhance your unique style. 
                 Let's make beauty effortless and fun!</p>
-                <a href="#" class="btn">Shop now</a>
+                <a href="products.html" class="btn">Shop now</a>
         </div>
     </section>
 
@@ -57,7 +61,7 @@
                     <p> Our products combine affordable luxury with 
                     eco-friendly values, ensuring beauty that cares for both you and the 
                     planet. At Bloomy, your beauty journey begins with confidence and style.</p>
-                    <a href="#" class="btn">Learn more</a>
+                    <a href="aboutus.html" class="btn">Learn more</a>
             </div>
         </div>
     </section>
@@ -146,13 +150,14 @@
             <div class="col">
                 <h3>Links <div class="underline"></div></h3>
                 <ul>
-                    <li><a href="">Home</a></li>
-                    <li><a href="">Products</a></li>
-                    <li><a href="">About us</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="aboutus.html">About us</a></li>
                     <li><a href="">Card</a></li>
-                    <li><a href="">Register</a></li>
+                    <li><a href="login.html">Register</a></li>
                 </ul>
             </div>
+            
             <div class="col">
                 <h3>Newsletter <div class="underline"></div></h3>
                 <form>
