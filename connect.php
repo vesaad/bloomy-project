@@ -28,6 +28,7 @@ try {
     $stmt->bindParam(':postcode', $postcode);
     $stmt->bindParam(':role', $role);
 
+    
     if ($stmt->execute()) {
         echo "SignUp Successful...";
     } else {

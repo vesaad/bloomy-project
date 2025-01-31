@@ -94,6 +94,7 @@ try {
             background-color: #f44336;
         }
     </style>
+    
 </head>
 <body>
     <div class="header">

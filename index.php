@@ -153,6 +153,7 @@
                     <li><a href="login.html">Register</a></li>
                 </ul>
             </div>
+            
             <div class="col">
                 <h3>Newsletter <div class="underline"></div></h3>
                 <form>

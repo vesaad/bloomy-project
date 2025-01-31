@@ -28,6 +28,7 @@
         <li><a class="active" href="signup-update.php"><i class="fa-solid fa-user"></i></a></li>
     </ul>
 </nav>
+
   <section>
     <div class="wrapper">
         <form action="login.php" method="POST">

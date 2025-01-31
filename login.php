@@ -42,6 +42,7 @@ try {
          
             echo "Invalid password. Please try again.";
         }
+        
     } else {
         echo "No users found with this email and role.";
     }
