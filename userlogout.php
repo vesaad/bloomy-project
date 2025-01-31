@@ -2,6 +2,6 @@
 session_start();
 session_unset();
 session_destroy();
-header("Location: login-update.html");
+header("Location: login-update.php");
 exit();
 ?>

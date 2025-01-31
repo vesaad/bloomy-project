@@ -12,20 +12,9 @@
 </head>
 
 <body>
-    <nav>
-        <div class="logo"> <img src="logo2.jpg" alt=""></div>
-        <input type="checkbox" id="click">
-        <label for="click" class="menu-btn">
-            <i class="fa-solid fa-bars"></i>
-        </label>
-        <ul>
-            <li><a href="index.php">Home</a></li>
-            <li><a href="products.html">Products</a></li>
-            <li><a href="aboutus.html">About Us</a></li>
-            <li><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
-            <li><a class="active" href="login-update.php"><i class="fa-solid fa-user"></i></a></li>
-        </ul>
-    </nav>
+    
+    <?php include 'header.php'; ?>
+
     <section>
         <div class="wrapper">
             <form action="connect.php" method="post">

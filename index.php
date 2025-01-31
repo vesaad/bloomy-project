@@ -1,3 +1,18 @@
+<?php
+$servername = "localhost";
+$username = "root";  
+$password = "";     
+$database = "bloomy_db";
+
+try {
+   
+    $conn = new PDO("mysql:host=$servername;dbname=$database;charset=utf8", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,24 +26,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 <body>
-    <nav>
-        <div class="logo"><img src="img/logo.jpg" alt=""></div>
-        <input type="checkbox" id="click">
-        <label for="click" class="menu-btn">
-            <i class="fa-solid fa-bars"></i>
-        </label>
-        <ul>
-            <li><a class="active" href="index.html">Home</a></li>
-            <li><a href="products.html">Products</a></li>
-<<<<<<< HEAD:index.html
-            <li><a href="aboutus.php">About us</a></li>
-=======
-            <li><a href="aboutus.html">About us</a></li>
->>>>>>> 0265e5e928a3493a11144d8fea503f1c58b83556:index.php
-            <li><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
-            <li><a href="signup-update.php"><i class="fa-solid fa-user"></i></a></li>
-        </ul>
-    </nav>
+
+
+<?php include "header.php"; ?>
+
 
     <section class="home" id="home">
         <div class="content">
@@ -61,52 +62,40 @@
                     <p> Our products combine affordable luxury with 
                     eco-friendly values, ensuring beauty that cares for both you and the 
                     planet. At Bloomy, your beauty journey begins with confidence and style.</p>
-                    <a href="aboutus.html" class="btn">Learn more</a>
-            </div>
+                    <a href="aboutus.php" class="btn">Learn more</a>
+            </div> 
         </div>
     </section>
 
 
     <section class="icons-container">
-        <div class="icons">
-            <img src="img/delivery.png" alt="">
-            <div class="info">
-                <h3>free delivery</h3>
-                <span>on all orders</span>
-            </div>
-        </div>
-
-        <div class="icons">
-            <img src="img/mon.png" alt="">
-            <div class="info">
-                <h3>10 days returns</h3>                 
-                <span>Moneyback guarantee</span>
-            </div>
-        </div>
-
-            <div class="icons">
-                <img src="img/gift.png" alt="">
+    <?php
+    $stmt = $conn->prepare("SELECT icon_img, title, description FROM icons");
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo '<div class="icons">
+                <img src="' . htmlspecialchars($row['icon_img']) . '" alt="">
                 <div class="info">
-                    <h3>order & gift</h3>
-                    <span>on all orders</span>
+                    <h3>' . htmlspecialchars($row['title']) . '</h3>
+                    <span>' . htmlspecialchars($row['description']) . '</span>
                 </div>
-            </div>
-
-            <div class="icons">
-                <img src="img/pay.png" alt="">
-                <div class="info">
-                    <h3>secure payments</h3>
-                    <span>Protected By Paypal</span>
-                </div>
-            </div>
-
-
+              </div>';
+    }
+    ?>
     </section>
 
+
+    <?php
+    $stmt = $conn->prepare("SELECT content FROM text WHERE page = 'index' AND section = 'text'");
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $homepage_text = $row['content'] ?? 'Default text here'; 
+    ?>
+
     <div class="text">
-        <h1><i class="fa-brands fa-instagram"></i>OUR COMMUNITY</h1>
-        <p>Show us your latest looks using <b>#BLOOMYBEAUTY</b> for 
-        a chance to appear on our homepage.</p>
+    <h1><i class="fa-brands fa-instagram"></i>OUR COMMUNITY</h1>
+    <p><?php echo $homepage_text; ?></p>
     </div>
 
 
@@ -130,54 +119,7 @@
     </aside>
 
 
-
-    <footer>
-        <div class="row">
-            <div class="col">
-                <img src="img/logo2.jpg" class="foto">
-                <p>Discover your beauty essentials at Bloomy Beauty Shop! From vibrant makeup
-                    to luxurious beauty products, we offer high-quality items to enhance
-                    your natural glow and boost your confidence!
-                </p>
-            </div>
-            <div class="col">
-                <h3>Store <div class="underline"></div></h3>
-                <p>Bill Clinton STR</p>
-                <p>Prishtine, Kosove</p>
-                <p class="email-id">bloomybeautyshop@outlook.com</p>
-                <h4>+383 45 123 456</h4>
-            </div>
-            <div class="col">
-                <h3>Links <div class="underline"></div></h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Products</a></li>
-                    <li><a href="aboutus.html">About us</a></li>
-                    <li><a href="">Card</a></li>
-                    <li><a href="login.html">Register</a></li>
-                </ul>
-            </div>
-            
-            <div class="col">
-                <h3>Newsletter <div class="underline"></div></h3>
-                <form>
-                    <i class="fa-regular fa-envelope"></i>
-                    <input type="email" placeholder="Write your email" required>
-                    <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
-                </form>
-                <div class="social-icons">
-                    <i class="fa-brands fa-facebook"></i>
-                    <i class="fa-brands fa-instagram"></i>
-                    <i class="fa-brands fa-twitter"></i>
-                    <i class="fa-brands fa-whatsapp"></i>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <p class="copyright">Bloomy Beauty Shop © 2024 - All Rights Reserved</p>
-    </footer>
-
-
+    <?php include 'footer.php'; ?>
 
 
 </body>
