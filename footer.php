@@ -47,8 +47,13 @@
                 <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
             </form>
             <div class="social-icons">
+
+            <a href="https://www.facebook.com/bloomybeautycenter" target="_blank">
                 <i class="fa-brands fa-facebook"></i>
-                <i class="fa-brands fa-instagram"></i>
+            </a>
+                <a href="https://www.instagram.com/bloomybeauty" target="_blank">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
                 <i class="fa-brands fa-twitter"></i>
                 <i class="fa-brands fa-whatsapp"></i>
             </div>
