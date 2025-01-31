@@ -19,11 +19,11 @@
             <i class="fa-solid fa-bars"></i>
         </label>
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li><a href="products.html">Products</a></li>
             <li><a href="aboutus.html">About Us</a></li>
             <li><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
-            <li><a class="active" href="login-update.html"><i class="fa-solid fa-user"></i></a></li>
+            <li><a class="active" href="login-update.php"><i class="fa-solid fa-user"></i></a></li>
         </ul>
     </nav>
     <section>
