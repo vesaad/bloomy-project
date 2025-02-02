@@ -13,7 +13,18 @@
 
 <body>
     
-    <?php include 'header.php'; ?>
+    <?php 
+    session_start();
+    include 'header.php'; 
+
+    if (isset($_SESSION['signup_message'])) {
+        echo "<div class='signup-message' style='background-color: #4CAF50; color: white; padding: 10px; text-align: center; margin-bottom: 20px;'>"
+            . $_SESSION['signup_message'] . "</div>";
+        unset($_SESSION['signup_message']); 
+    }
+    
+    
+    ?>
 
     <section>
         <div class="wrapper">

@@ -1,4 +1,5 @@
 <?php
+session_start();
 $firstName = isset($_POST['firstName']) ? $_POST['firstName'] : '';
 $lastName = isset($_POST['lastName']) ? $_POST['lastName'] : '';
 $email = isset($_POST['email']) ? $_POST['email'] : '';
@@ -30,13 +31,18 @@ try {
 
     
     if ($stmt->execute()) {
-        echo "SignUp Successful...";
+        $_SESSION['signup_message'] = "SignUp Successful!";
     } else {
-        echo "Error: Failed to insert data.";
+        $_SESSION['signup_message'] = "Error: Failed to insert data.";
     }
+    header("Location: signup-update.php");
+    exit();
 } catch (PDOException $e) {
 
-    echo "Connection failed: " . $e->getMessage();
+    $_SESSION['signup_message'] = "Connection failed: " . $e->getMessage();
+    header("Location: signup.php");
+    exit();
+    
 }
 ?>
 
