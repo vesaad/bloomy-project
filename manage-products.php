@@ -13,17 +13,18 @@ try {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $productId = $_POST['product_id'];
     $name = $_POST['name'];
-    $price = $_POST['price'];
+    $regularPrice = $_POST['regular_price'];
+    $salePrice = $_POST['sale_price'];
     $stock = $_POST['stock'];
 
     if ($productId) {
         // Update existing product
-        $stmt = $pdo->prepare("UPDATE products SET name=?, price=?, stock=? WHERE id=?");
-        $stmt->execute([$name, $price, $stock, $productId]);
+        $stmt = $pdo->prepare("UPDATE adminProducts SET name=?, regular_price=?, sale_price=?, stock=? WHERE id=?");
+        $stmt->execute([$name, $regularPrice, $salePrice, $stock, $productId]);
     } else {
         // Add new product
-        $stmt = $pdo->prepare("INSERT INTO products (name, price, stock) VALUES (?, ?, ?)");
-        $stmt->execute([$name, $price, $stock]);
+        $stmt = $pdo->prepare("INSERT INTO adminProducts (name, regular_price, sale_price, stock) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$name, $regularPrice, $salePrice, $stock]);
     }
 
     // Redirect to avoid form resubmission
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $editProduct = null;
 if (isset($_GET['edit'])) {
     $productId = $_GET['edit'];
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE id=?");
+    $stmt = $pdo->prepare("SELECT * FROM adminProducts WHERE id=?");
     $stmt->execute([$productId]);
     $editProduct = $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -43,14 +44,14 @@ if (isset($_GET['edit'])) {
 // Handle delete action
 if (isset($_GET['delete'])) {
     $productId = $_GET['delete'];
-    $stmt = $pdo->prepare("DELETE FROM products WHERE id=?");
+    $stmt = $pdo->prepare("DELETE FROM adminProducts WHERE id=?");
     $stmt->execute([$productId]);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
 // Fetch existing products from the database
-$result = $pdo->query("SELECT * FROM products");
+$result = $pdo->query("SELECT * FROM adminProducts");
 $products = $result->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the database connection
@@ -185,14 +186,17 @@ $pdo = null;
                     <label for="name">Product Name</label>
                     <input type="text" id="name" name="name" required value="<?php echo isset($editProduct) ? htmlspecialchars($editProduct['name']) : ''; ?>">
 
-                    <label for="price">Price</label>
-                    <input type="number" id="price" name="price" step="0.01" required value="<?php echo isset($editProduct) ? htmlspecialchars($editProduct['price']) : ''; ?>">
+                    <label for="regular_price">Regular Price</label>
+                    <input type="number" id="regular_price" name="regular_price" step="0.01" required value="<?php echo isset($editProduct) ? htmlspecialchars($editProduct['regular_price']) : ''; ?>">
+
+                    <label for="sale_price">Sale Price</label>
+                    <input type="number" id="sale_price" name="sale_price" step="0.01" required value="<?php echo isset($editProduct) ? htmlspecialchars($editProduct['sale_price']) : ''; ?>">
 
                     <label for="stock">Stock</label>
                     <input type="number" id="stock" name="stock" required value="<?php echo isset($editProduct) ? htmlspecialchars($editProduct['stock']) : ''; ?>">
 
                     <button type="submit"><?php echo isset($editProduct) ? 'Update Product' : 'Add Product'; ?></button>
-                </form>
+                    </form>
             </div>
 
             <div class="product-list">
@@ -202,7 +206,8 @@ $pdo = null;
                         <tr>
                             <th>Product ID</th>
                             <th>Name</th>
-                            <th>Price</th>
+                            <th>Regular Price</th>
+                            <th>Sale Price</th>
                             <th>Stock</th>
                             <th>Actions</th>
                         </tr>
@@ -212,7 +217,8 @@ $pdo = null;
                             <tr>
                                 <td><?php echo htmlspecialchars($product['id']); ?></td>
                                 <td><?php echo htmlspecialchars($product['name']); ?></td>
-                                <td><?php echo htmlspecialchars($product['price']); ?></td>
+                                <td><?php echo htmlspecialchars($product['regular_price']); ?></td>
+                                <td><?php echo htmlspecialchars($product['sale_price']); ?></td>
                                 <td><?php echo htmlspecialchars($product['stock']); ?></td>
                                 <td>
                                     <a href="?edit=<?php echo $product['id']; ?>">Edit</a> | 
