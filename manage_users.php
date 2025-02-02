@@ -1,13 +1,14 @@
 <?php
 session_start();
 
-// Database connection
-$mysqli = new mysqli("localhost", "root", "", "bloomy_db");
-
-// Check connection
-if ($mysqli->connect_error) {
-    die("Connection failed: " . $mysqli->connect_error);
+// Database connection using PDO
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=bloomy_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
+
 // Handle form submission for adding/updating users
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userId = $_POST['user_id'];
@@ -21,16 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($userId) {
         // Update existing user
-        $stmt = $mysqli->prepare("UPDATE users SET name=?, lastname=?, email=?, password=?, birthday=?, address=?, postcode=? WHERE id=?");
-        $stmt->bind_param("sssssssi", $name, $lastname, $email, $password, $birthday, $address, $postcode, $userId);
-        $stmt->execute();
-        $stmt->close();
+        $stmt = $pdo->prepare("UPDATE users SET name=?, lastname=?, email=?, password=?, birthday=?, address=?, postcode=? WHERE id=?");
+        $stmt->execute([$name, $lastname, $email, $password, $birthday, $address, $postcode, $userId]);
     } else {
         // Add new user
-        $stmt = $mysqli->prepare("INSERT INTO users (name, lastname, email, password, birthday, address, postcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssss", $name, $lastname, $email, $password, $birthday, $address, $postcode);
-        $stmt->execute();
-        $stmt->close();
+        $stmt = $pdo->prepare("INSERT INTO users (name, lastname, email, password, birthday, address, postcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $lastname, $email, $password, $birthday, $address, $postcode]);
     }
 
     // Redirect to avoid form resubmission
@@ -42,31 +39,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $editUser  = null;
 if (isset($_GET['edit'])) {
     $userId = $_GET['edit'];
-    $stmt = $mysqli->prepare("SELECT * FROM users WHERE id=?");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $editUser  = $result->fetch_assoc();
-    $stmt->close();
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id=?");
+    $stmt->execute([$userId]);
+    $editUser  = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // Handle delete action
 if (isset($_GET['delete'])) {
     $userId = $_GET['delete'];
-    $stmt = $mysqli->prepare("DELETE FROM users WHERE id=?");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $stmt->close();
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id=?");
+    $stmt->execute([$userId]);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
 // Fetch existing users from the database
-$result = $mysqli->query("SELECT * FROM signup");
-$users = $result->fetch_all(MYSQLI_ASSOC);
+$result = $pdo->query("SELECT * FROM signup");
+$users = $result->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the database connection
-$mysqli->close();
+$pdo = null;
 ?>
 
 <!DOCTYPE html>

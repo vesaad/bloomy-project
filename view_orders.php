@@ -1,14 +1,13 @@
 <?php
 session_start();
 
-// Database connection
-$mysqli = new mysqli("localhost", "root", "", "bloomy_db");
-
-// Check connection
-if ($mysqli->connect_error) {
-    die("Connection failed: " . $mysqli->connect_error);
+// Database connection using PDO
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=bloomy_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
-
 
 // Handle form submission for adding/updating orders
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -20,16 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($orderId) {
         // Update existing order
-        $stmt = $mysqli->prepare("UPDATE orders SET customer_name=?, product=?, status=?, total=? WHERE id=?");
-        $stmt->bind_param("ssssi", $customerName, $product, $status, $total, $orderId);
-        $stmt->execute();
-        $stmt->close();
+        $stmt = $pdo->prepare("UPDATE orders SET customer_name=?, product=?, status=?, total=? WHERE id=?");
+        $stmt->execute([$customerName, $product, $status, $total, $orderId]);
     } else {
         // Add new order
-        $stmt = $mysqli->prepare("INSERT INTO orders (customer_name, product, status, total) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssd", $customerName, $product, $status, $total);
-        $stmt->execute();
-        $stmt->close();
+        $stmt = $pdo->prepare("INSERT INTO orders (customer_name, product, status, total) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$customerName, $product, $status, $total]);
     }
 
     // Redirect to avoid form resubmission
@@ -41,31 +36,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $editOrder = null;
 if (isset($_GET['edit'])) {
     $orderId = $_GET['edit'];
-    $stmt = $mysqli->prepare("SELECT * FROM orders WHERE id=?");
-    $stmt->bind_param("i", $orderId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $editOrder = $result->fetch_assoc();
-    $stmt->close();
+    $stmt = $pdo->prepare("SELECT * FROM orders WHERE id=?");
+    $stmt->execute([$orderId]);
+    $editOrder = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // Handle delete action
 if (isset($_GET['delete'])) {
     $orderId = $_GET['delete'];
-    $stmt = $mysqli->prepare("DELETE FROM orders WHERE id=?");
-    $stmt->bind_param("i", $orderId);
-    $stmt->execute();
-    $stmt->close();
+    $stmt = $pdo->prepare("DELETE FROM orders WHERE id=?");
+    $stmt->execute([$orderId]);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
 // Fetch existing orders from the database
-$result = $mysqli->query("SELECT * FROM adminpanel");
-$orders = $result->fetch_all(MYSQLI_ASSOC);
+$result = $pdo->query("SELECT * FROM orders");
+$orders = $result->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the database connection
-$mysqli->close();
+$pdo = null;
 ?>
 
 

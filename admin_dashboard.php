@@ -1,33 +1,34 @@
 <?php
 session_start();
 
-// Database connection
-$mysqli = new mysqli("localhost", "root", "", "bloomy_db");
-
-// Check connection
-if ($mysqli->connect_error) {
-    die("Connection failed: " . $mysqli->connect_error);
+// Database connection using PDO
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=bloomy_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 // Fetch total users
-$totalUsersResult = $mysqli->query("SELECT COUNT(*) as total FROM signup");
-$totalUsers = $totalUsersResult->fetch_assoc()['total'];
+$totalUsersStmt = $pdo->query("SELECT COUNT(*) as total FROM signup");
+$totalUsers = $totalUsersStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
 // Fetch total orders
-$totalOrdersResult = $mysqli->query("SELECT COUNT(*) as total FROM adminpanel");
-$totalOrders = $totalOrdersResult->fetch_assoc()['total'];
+$totalOrdersStmt = $pdo->query("SELECT COUNT(*) as total FROM adminpanel");
+$totalOrders = $totalOrdersStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
 // Fetch total products
-$totalProductsResult = $mysqli->query("SELECT COUNT(*) as total FROM products");
-$totalProducts = $totalProductsResult->fetch_assoc()['total'];
+$totalProductsStmt = $pdo->query("SELECT COUNT(*) as total FROM products");
+$totalProducts = $totalProductsStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
 // Fetch recent orders
-$recentOrdersResult = $mysqli->query("SELECT * FROM adminpanel ORDER BY created_at DESC LIMIT 5");
-$recentOrders = $recentOrdersResult->fetch_all(MYSQLI_ASSOC);
+$recentOrdersStmt = $pdo->query("SELECT * FROM adminpanel ORDER BY created_at DESC LIMIT 5");
+$recentOrders = $recentOrdersStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the database connection
-$mysqli->close();
+$pdo = null;
 ?>
+
 
 
 <!DOCTYPE html>

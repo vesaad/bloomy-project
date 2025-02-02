@@ -1,12 +1,12 @@
 <?php
 session_start();
 
-// Database connection
-$mysqli = new mysqli("localhost", "root", "", "bloomy_db");
-
-// Check connection
-if ($mysqli->connect_error) {
-    die("Connection failed: " . $mysqli->connect_error);
+// Database connection using PDO
+try {
+    $pdo = new PDO("mysql:host=localhost;dbname=bloomy_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
 
 // Handle form submission for adding/updating products
@@ -18,16 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($productId) {
         // Update existing product
-        $stmt = $mysqli->prepare("UPDATE products SET name=?, price=?, stock=? WHERE id=?");
-        $stmt->bind_param("ssii", $name, $price, $stock, $productId);
-        $stmt->execute();
-        $stmt->close();
+        $stmt = $pdo->prepare("UPDATE products SET name=?, price=?, stock=? WHERE id=?");
+        $stmt->execute([$name, $price, $stock, $productId]);
     } else {
         // Add new product
-        $stmt = $mysqli->prepare("INSERT INTO products (name, price, stock) VALUES (?, ?, ?)");
-        $stmt->bind_param("ssi", $name, $price, $stock);
-        $stmt->execute();
-        $stmt->close();
+        $stmt = $pdo->prepare("INSERT INTO products (name, price, stock) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $price, $stock]);
     }
 
     // Redirect to avoid form resubmission
@@ -39,31 +35,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $editProduct = null;
 if (isset($_GET['edit'])) {
     $productId = $_GET['edit'];
-    $stmt = $mysqli->prepare("SELECT * FROM products WHERE id=?");
-    $stmt->bind_param("i", $productId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $editProduct = $result->fetch_assoc();
-    $stmt->close();
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE id=?");
+    $stmt->execute([$productId]);
+    $editProduct = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // Handle delete action
 if (isset($_GET['delete'])) {
     $productId = $_GET['delete'];
-    $stmt = $mysqli->prepare("DELETE FROM products WHERE id=?");
-    $stmt->bind_param("i", $productId);
-    $stmt->execute();
-    $stmt->close();
+    $stmt = $pdo->prepare("DELETE FROM products WHERE id=?");
+    $stmt->execute([$productId]);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
 // Fetch existing products from the database
-$result = $mysqli->query("SELECT * FROM products");
-$products = $result->fetch_all(MYSQLI_ASSOC);
+$result = $pdo->query("SELECT * FROM products");
+$products = $result->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the database connection
-$mysqli->close();
+$pdo = null;
 ?>
 
 <!DOCTYPE html>
