@@ -23,7 +23,7 @@
         </label>
         <ul>
             <li><a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">Home</a></li>
-            <li><a href="products.php">Products</a></li>
+            <li><a href="products.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'products.php' ? 'active' : ''; ?>">Products</a></li>
             <li><a href="aboutus.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'aboutus.php' ? 'active' : ''; ?>">About us</a></li>
             <li><a href="shoppingcart/cart.php"><i class="fa-solid fa-cart-shopping"></i></a></li>
             <li><a href="signup-update.php"class="<?php echo basename($_SERVER['PHP_SELF']) == 'login-update.php' ? 'active' : ''; ?>"><i class="fa-solid fa-user"></i></a></li>
