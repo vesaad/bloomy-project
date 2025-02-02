@@ -12,19 +12,20 @@ try {
 // Handle form submission for adding/updating orders
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $orderId = $_POST['order_id'];
-    $customerName = $_POST['customer_name'];
-    $product = $_POST['product'];
-    $status = $_POST['status'];
+    $productName = $_POST['product']; // Changed to match the order
+    $quantity = $_POST['quantity']; // Assuming you have a quantity field
+    $costumerName = $_POST['customer_name'];
     $total = $_POST['total'];
+    $address = $_POST['address'];
 
     if ($orderId) {
         // Update existing order
-        $stmt = $pdo->prepare("UPDATE orders SET customer_name=?, product=?, status=?, total=? WHERE id=?");
-        $stmt->execute([$customerName, $product, $status, $total, $orderId]);
+        $stmt = $pdo->prepare("UPDATE adminpanel SET productName=?, quantity=?, costumerName=?, total=?, address=? WHERE id=?");
+        $stmt->execute([$productName, $quantity, $costumerName, $total, $address, $orderId]);
     } else {
         // Add new order
-        $stmt = $pdo->prepare("INSERT INTO orders (customer_name, product, status, total) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$customerName, $product, $status, $total]);
+        $stmt = $pdo->prepare("INSERT INTO adminpanel (productName, quantity, costumerName, total, address) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$productName, $quantity, $costumerName, $total, $address]);
     }
 
     // Redirect to avoid form resubmission
@@ -36,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $editOrder = null;
 if (isset($_GET['edit'])) {
     $orderId = $_GET['edit'];
-    $stmt = $pdo->prepare("SELECT * FROM orders WHERE id=?");
+    $stmt = $pdo->prepare("SELECT * FROM adminpanel WHERE id=?");
     $stmt->execute([$orderId]);
     $editOrder = $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -44,20 +45,19 @@ if (isset($_GET['edit'])) {
 // Handle delete action
 if (isset($_GET['delete'])) {
     $orderId = $_GET['delete'];
-    $stmt = $pdo->prepare("DELETE FROM orders WHERE id=?");
+    $stmt = $pdo->prepare("DELETE FROM adminpanel WHERE id=?");
     $stmt->execute([$orderId]);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
 // Fetch existing orders from the database
-$result = $pdo->query("SELECT * FROM orders");
+$result = $pdo->query("SELECT * FROM adminpanel");
 $orders = $result->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the database connection
 $pdo = null;
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -124,7 +124,7 @@ $pdo = null;
             margin-bottom: 5px;
         }
 
-        .order-form input, .order-form select {
+        .order-form input {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -137,6 +137,7 @@ $pdo = null;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .order-list table {
@@ -174,27 +175,27 @@ $pdo = null;
     </nav>
 
     <section class="view-orders">
-        <h1>View Orders</h1>
+    <h1>View Orders</h1>
         
         <div class="order-form">
             <h2><?php echo isset($editOrder) ? 'Edit Order' : 'Add New Order'; ?></h2>
             <form method="POST" action="">
                 <input type="hidden" name="order_id" value="<?php echo isset($editOrder) ? $editOrder['id'] : ''; ?>">
-                <label for="customer_name">Customer Name</label>
-                <input type="text" id="customer_name" name="customer_name" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['customer_name']) : ''; ?>">
-
+                
                 <label for="product">Product</label>
-                <input type="text" id="product" name="product" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['product']) : ''; ?>">
+                <input type="text" id="product" name="product" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['productName']) : ''; ?>">
 
-                <label for="status">Status</label>
-                <select id="status" name="status" required>
-                    <option value="Pending" <?php echo (isset($editOrder) && $editOrder['status'] == 'Pending') ? 'selected' : ''; ?>>Pending</option>
-                    <option value="Shipped" <?php echo (isset($editOrder) && $editOrder['status'] == 'Shipped') ? 'selected' : ''; ?>>Shipped</option>
-                    <option value="Delivered" <?php echo (isset($editOrder) && $editOrder['status'] == 'Delivered') ? 'selected' : ''; ?>>Delivered</option>
-                </select>
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['quantity']) : ''; ?>">
+
+                <label for="customer_name">Customer Name</label>
+                <input type="text" id="customer_name" name="customer_name" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['costumerName']) : ''; ?>">
 
                 <label for="total">Total</label>
                 <input type="number" id="total" name="total" step="0.01" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['total']) : ''; ?>">
+
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" required value="<?php echo isset($editOrder) ? htmlspecialchars($editOrder['address']) : ''; ?>">
 
                 <button type="submit"><?php echo isset($editOrder) ? 'Update Order' : 'Add Order'; ?></button>
             </form>
@@ -206,10 +207,11 @@ $pdo = null;
                 <thead>
                     <tr>
                         <th>Order ID</th>
-                        <th>Customer Name</th>
                         <th>Product</th>
-                        <th>Status</th>
+                        <th>Quantity</th>
+                        <th>Customer Name</th>
                         <th>Total</th>
+                        <th>Address</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -217,10 +219,11 @@ $pdo = null;
                     <?php foreach ($orders as $order): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($order['id']); ?></td>
-                            <td><?php echo htmlspecialchars($order['customer_name']); ?></td>
-                            <td><?php echo htmlspecialchars($order['product']); ?></td>
-                            <td><?php echo htmlspecialchars($order['status']); ?></td>
+                            <td><?php echo htmlspecialchars($order['productName']); ?></td>
+                            <td><?php echo htmlspecialchars($order['quantity']); ?></td>
+                            <td><?php echo htmlspecialchars($order['costumerName']); ?></td>
                             <td><?php echo htmlspecialchars($order['total']); ?></td>
+                            <td><?php echo htmlspecialchars($order['address']); ?></td>
                             <td>
                                 <a href="?edit=<?php echo $order['id']; ?>">Edit</a> | 
                                 <a href="?delete=<?php echo $order['id']; ?>" onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>

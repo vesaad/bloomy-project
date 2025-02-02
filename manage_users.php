@@ -22,11 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($userId) {
         // Update existing user
-        $stmt = $pdo->prepare("UPDATE users SET name=?, lastname=?, email=?, password=?, birthday=?, address=?, postcode=? WHERE id=?");
+        $stmt = $pdo->prepare("UPDATE signup SET firstName=?, lastName=?, email=?, password=?, birthday=?, address=?, postcode=? WHERE id=?");
         $stmt->execute([$name, $lastname, $email, $password, $birthday, $address, $postcode, $userId]);
     } else {
         // Add new user
-        $stmt = $pdo->prepare("INSERT INTO users (name, lastname, email, password, birthday, address, postcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO signup (firstName, lastName, email, password, birthday, address, postcode) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$name, $lastname, $email, $password, $birthday, $address, $postcode]);
     }
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $editUser  = null;
 if (isset($_GET['edit'])) {
     $userId = $_GET['edit'];
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE id=?");
+    $stmt = $pdo->prepare("SELECT * FROM signup WHERE id=?");
     $stmt->execute([$userId]);
     $editUser  = $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -47,7 +47,7 @@ if (isset($_GET['edit'])) {
 // Handle delete action
 if (isset($_GET['delete'])) {
     $userId = $_GET['delete'];
-    $stmt = $pdo->prepare("DELETE FROM users WHERE id=?");
+    $stmt = $pdo->prepare("DELETE FROM signup WHERE id=?");
     $stmt->execute([$userId]);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
@@ -183,35 +183,36 @@ $pdo = null;
             <form method="POST" action="">
                 <input type="hidden" name="user_id" value="<?php echo isset($editUser ) ? $editUser ['id'] : ''; ?>">
                 <label for="name">First Name</label>
-                <input type="text" id="name" name="name" required value="<?php echo isset($editUser ) ? $editUser ['name'] : ''; ?>">
+                <input type="text" id="name" name="name" required value="<?php echo isset($editUser ) ? htmlspecialchars($editUser ['firstName']) : ''; ?>">
 
                 <label for="lastname">Last Name</label>
-                <input type="text" id="lastname" name="lastname" required value="<?php echo isset($editUser ) ? $editUser ['lastname'] : ''; ?>">
+                <input type="text" id="lastname" name="lastname" required value="<?php echo isset($editUser ) ? htmlspecialchars($editUser ['lastName']) : ''; ?>">
 
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required value="<?php echo isset($editUser ) ? $editUser ['email'] : ''; ?>">
+                <input type="email" id="email" name="email" required value="<?php echo isset($editUser ) ? htmlspecialchars($editUser ['email']) : ''; ?>">
 
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
 
                 <label for="birthday">Birthday</label>
-                <input type="date" id="birthday" name="birthday" required value="<?php echo isset($editUser ) ? $editUser ['birthday'] : ''; ?>">
+                <input type="date" id="birthday" name="birthday" required value="<?php echo isset($editUser ) ? htmlspecialchars($editUser ['birthday']) : ''; ?>">
 
                 <label for="address">Address</label>
-                <input type="text" id="address" name="address" required value="<?php echo isset($editUser ) ? $editUser ['address'] : ''; ?>">
+                <input type="text" id="address" name="address" required value="<?php echo isset($editUser ) ? htmlspecialchars($editUser ['address']) : ''; ?>">
 
                 <label for="postcode">Postcode</label>
-                <input type="text" id="postcode" name="postcode" required value="<?php echo isset($editUser ) ? $editUser ['postcode'] : ''; ?>">
+                <input type="text" id="postcode" name="postcode" required value="<?php echo isset($editUser ) ? htmlspecialchars($editUser ['postcode']) : ''; ?>">
 
                 <button type="submit"><?php echo isset($editUser ) ? 'Update User' : 'Add User'; ?></button>
             </form>
         </div>
+
         <div class="user-list">
             <h2>Existing Users</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Birthday</th>
