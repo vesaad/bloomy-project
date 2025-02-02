@@ -35,7 +35,7 @@
                 <li><a href="index.php">Home</a></li>
                 <li><a href="products.php">Products</a></li>
                 <li><a href="aboutus.php">About us</a></li>
-                <li><a href="#">Cart</a></li>
+                <li><a href="shoppingcart/cart.php">Cart</a></li>
                 <li><a href="signup-update.php">Register</a></li>
             </ul>
         </div>

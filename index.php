@@ -39,7 +39,7 @@ try {
                 makeup essentials. Discover top-quality products, expert 
                 tips, and everything you need to enhance your unique style. 
                 Let's make beauty effortless and fun!</p>
-                <a href="products.html" class="btn">Shop now</a>
+                <a href="products.php" class="btn">Shop now</a>
         </div>
     </section>
 
