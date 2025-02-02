@@ -244,4 +244,4 @@ $pdo = null;
         <p>Bloomy Beauty Shop © 2024 - All Rights Reserved</p>
     </footer>
 </body>
-</html>
+</html> 

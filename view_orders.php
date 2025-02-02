@@ -51,7 +51,7 @@ if (isset($_GET['delete'])) {
 }
 
 // Fetch existing orders from the database
-$result = $pdo->query("SELECT * FROM orders");
+$result = $pdo->query("SELECT * FROM adminpanel");
 $orders = $result->fetchAll(PDO::FETCH_ASSOC);
 
 // Close the database connection
