@@ -14,20 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <nav>
-    <div class="logo"><img src="logo2.jpg" alt=""></div>
-    <input type="checkbox" id="click">
-    <label for="click" class="menu-btn">
-        <i class="fa-solid fa-bars"></i>
-    </label>
-    <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="products.html">Products</a></li>
-        <li><a href="aboutus.html">About Us</a></li>
-        <li><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
-        <li><a class="active" href="signup-update.php"><i class="fa-solid fa-user"></i></a></li>
-    </ul>
-</nav>
+
+<?php include 'header.php'; ?>
 
   <section>
     <div class="wrapper">
@@ -52,6 +40,7 @@
       </form>
      </div>
   </section>
+  
   <script src="script.js"></script>
 </body>
 </html>
